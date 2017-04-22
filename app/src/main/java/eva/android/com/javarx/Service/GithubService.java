@@ -1,0 +1,11 @@
+package eva.android.com.javarx.Service;
+
+import eva.android.com.javarx.Models.User;
+import retrofit2.http.GET;
+import retrofit2.http.Path;
+import rx.Observable;
+
+public interface GithubService {
+    @GET("/users/{user}")
+    Observable<User> getUsers(@Path("user") String user);
+}
