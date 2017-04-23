@@ -4,8 +4,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.annimon.stream.Stream;
 
@@ -19,9 +19,10 @@ import rx.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
 
-    CardAdapter mCardAdapter;
-    String API_BASE_URL = "https://api.github.com/";
-    Realm realm;
+    private CardAdapter mCardAdapter;
+    private final String API_BASE_URL = "https://api.github.com/";
+    private Realm realm;
+    private String[] githubUsers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,22 +47,28 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mCardAdapter = new CardAdapter(realm.where(User.class).findAll());
         mRecyclerView.setAdapter(mCardAdapter);
-
+        /*
+        * realm async transaction to wipe users data
+        */
+        githubUsers = getResources().getStringArray(R.array.github_users);
         bClear.setOnClickListener(v -> realm.executeTransactionAsync(realm1 -> realm1.delete(User.class)));
-        bFetch.setOnClickListener(v -> Stream.of(Data.githubList).forEach(s -> service.getUsers(s)
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        r -> realm.executeTransactionAsync(realm1 -> realm1.insert(r)),
-                        Throwable::printStackTrace,
-                        () -> Toast.makeText(this, "complete", Toast.LENGTH_SHORT).show()
-                )));
+        bFetch.setOnClickListener(v -> Stream.of(githubUsers).forEach(s -> service.getUsers(s) //lambda foreach
+                        .subscribeOn(Schedulers.newThread()) //subscribe on new thread
+                        .observeOn(AndroidSchedulers.mainThread()) //observe on UI thread
+                        .subscribe(
+                                r -> realm.executeTransactionAsync(realm1 -> realm1.insert(r)), //onNext()
+                                Throwable::printStackTrace, //onError()
+                                () -> Log.d("Log", "Complete") //onComplete()
+                        )));
 
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        /*
+        * close realm when activity destroy
+        */
         realm.close();
     }
 }

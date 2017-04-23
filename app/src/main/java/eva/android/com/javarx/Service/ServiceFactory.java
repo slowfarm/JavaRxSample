@@ -7,12 +7,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ServiceFactory {
 
     public static <T> T createRetrofitService(Class<T> clazz, String endPoint) {
-        final Retrofit restAdapter = new Retrofit.Builder()
+        Retrofit restAdapter = new Retrofit.Builder()
                 .baseUrl(endPoint)
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-
         return restAdapter.create(clazz);
     }
 }

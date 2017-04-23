@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">JavaRx</string>
+    <string name="clear">Clear</string>
+    <string name="fetch">Fetch</string>
+    <string name="avatar">avatar</string>
+    <string-array name="github_users">
+        <item>slowfarm</item>
+        <item>JakeWharton</item>
+        <item>gothinkster</item>
+        <item>Babylonpartners</item>
+        <item>keon</item>
+        <item>ageitgey</item>
+        <item>caffe2</item>
+        <item>kamranahmedse</item>
+        <item>google</item>
+    </string-array>
 </resources>

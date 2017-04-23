@@ -16,7 +16,7 @@ import eva.android.com.javarx.R;
 
 
 public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
-    private List<User> mItems;
+    private final List<User> mItems;
 
     public CardAdapter(List<User> items) {
         mItems = items;
@@ -25,7 +25,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.recycler_view, viewGroup, false);
+                .inflate(R.layout.recycler_item, viewGroup, false);
         return new ViewHolder(v);
     }
 
