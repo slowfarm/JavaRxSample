@@ -1,8 +1,9 @@
 <resources>
-    <string name="app_name">JavaRx</string>
-    <string name="clear">Clear</string>
-    <string name="fetch">Fetch</string>
+    <string name="app_name">RXSampleApp</string>
+    <string name="clear">Отчистить</string>
+    <string name="fetch">Получить</string>
     <string name="avatar">avatar</string>
+    <string name="base_url">https://api.github.com/</string>
     <string-array name="github_users">
         <item>slowfarm</item>
         <item>JakeWharton</item>

@@ -11,5 +11,5 @@ public interface GithubService {
     * get request with variable path
     */
     @GET("/users/{user}")
-    Single<User> getUsers(@Path("user") String user);
+    Single<User> getUser(@Path("user") String user);
 }

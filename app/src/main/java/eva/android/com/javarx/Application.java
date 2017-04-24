@@ -11,14 +11,13 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class Application extends android.app.Application {
 
     public static GithubService service;
-    private final String API_BASE_URL = "https://api.github.com/";
 
     @Override
     public void onCreate() {
         super.onCreate();
         Realm.init(this);
         /**
-        * initialize realm configuration
+        * init realm configuration
         */
         RealmConfiguration realmConfiguration = new RealmConfiguration
                 .Builder()
@@ -26,11 +25,11 @@ public class Application extends android.app.Application {
                 .build();
         Realm.setDefaultConfiguration(realmConfiguration);
         /**
-         * initialize retrofit configurations
+         * init retrofit configurations
          */
         Retrofit retrofit = new Retrofit
                 .Builder()
-                .baseUrl(API_BASE_URL)
+                .baseUrl(getResources().getString(R.string.base_url))
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();

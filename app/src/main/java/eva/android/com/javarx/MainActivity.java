@@ -25,13 +25,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         /**
-         * Realm initialization and adding change listener
+         * Realm init and adding change listener
          */
         Realm.init(this);
         realm = Realm.getDefaultInstance();
         realm.addChangeListener(element -> mCardAdapter.notifyDataSetChanged());
         /**
-         * View initialization
+         * View init
          */
         RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         Button bClear = (Button) findViewById(R.id.button_clear);
@@ -42,17 +42,17 @@ public class MainActivity extends AppCompatActivity {
 
         githubUsers = getResources().getStringArray(R.array.github_users);
         /**
-         * realm async transaction to wipe users data
+         * Realm async transaction to wipe users data
          */
         bClear.setOnClickListener(v -> realm.executeTransactionAsync(realm1 -> realm1.delete(User.class)));
         bFetch.setOnClickListener(v -> Stream.of(githubUsers).forEach(s ->
-                Application.getService().getUsers(s) // lambda foreach
+                Application.getService().getUser(s)
                         /**
                          * network operations must be performed from another thread
                          */
                         .subscribeOn(Schedulers.newThread())
                         /**
-                         * realm objects can only be accessed on the thread they were created
+                         * Realm objects can only be accessed on the thread they were created
                          */
                         .observeOn(AndroidSchedulers.mainThread())
                         /**

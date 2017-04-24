@@ -33,15 +33,11 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
         viewHolder.name.setText("username: " + mItems.get(i).getLogin());
         viewHolder.id.setText("id: " + mItems.get(i).getId());
-        /**
-         * Picasso with context, load from url, placeholder while uploading,
-         * error when uploading failed, into ImageView
-         */
-        Picasso.with(viewHolder.itemView.getContext())
-                .load(mItems.get(i).getAvatarUrl())
-                .placeholder(R.drawable.ic_image)
-                .error(R.drawable.ic_error)
-                .into(viewHolder.avatar);
+        Picasso.with(viewHolder.itemView.getContext()) // Context
+                .load(mItems.get(i).getAvatarUrl()) // url
+                .placeholder(R.drawable.ic_image) // placeholder image
+                .error(R.drawable.ic_error) // error image
+                .into(viewHolder.avatar); // image container
     }
 
     @Override
