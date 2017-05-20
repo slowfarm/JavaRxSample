@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import eva.android.com.javarx.Models.User;
@@ -16,7 +17,7 @@ import eva.android.com.javarx.R;
 
 
 public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
-    private final List<User> mItems;
+    private List<User> mItems = new ArrayList<>();
 
     public CardAdapter(List<User> items) {
         mItems = items;

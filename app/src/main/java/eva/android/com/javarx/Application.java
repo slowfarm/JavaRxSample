@@ -5,6 +5,7 @@ import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 
@@ -30,7 +31,7 @@ public class Application extends android.app.Application {
         Retrofit retrofit = new Retrofit
                 .Builder()
                 .baseUrl(getResources().getString(R.string.base_url))
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         service = retrofit.create(GithubService.class);
