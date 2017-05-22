@@ -103,13 +103,10 @@ public class MainActivity extends AppCompatActivity {
 
         Disposable disposable = paginator
                 .onBackpressureDrop()
-                .concatMap(new Function<Integer, Publisher<User>>() {
-                    @Override
-                    public Publisher<User> apply(@NonNull Integer page) throws Exception {
-                        loading = true;
-                        progressBar.setVisibility(View.VISIBLE);
-                        return dataFromNetwork();
-                    }
+                .concatMap(page -> {
+                    loading = true;
+                    progressBar.setVisibility(View.VISIBLE);
+                    return dataFromNetwork();
                 })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
