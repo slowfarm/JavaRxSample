@@ -7,12 +7,12 @@ import io.realm.RealmObject;
 
 public class User extends RealmObject {
 
-    @SerializedName("login") private String login;
+    @SerializedName("name") private String name;
     @SerializedName("id") private Integer id;
     @SerializedName("avatar_url") private String avatarUrl;
 
-    public String getLogin() {
-        return login;
+    public String getName() {
+        return name;
     }
 
     public Integer getId() {

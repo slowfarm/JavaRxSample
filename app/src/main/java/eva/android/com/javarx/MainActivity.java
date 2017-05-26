@@ -9,27 +9,26 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 
-import org.reactivestreams.Publisher;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
+
+import javax.inject.Inject;
 
 import eva.android.com.javarx.Adapter.CardAdapter;
 import eva.android.com.javarx.Models.User;
+import eva.android.com.javarx.Net.GithubService;
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Function;
 import io.reactivex.processors.PublishProcessor;
 import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
+import retrofit2.Retrofit;
 
 public class MainActivity extends AppCompatActivity {
+
+    @Inject
+    Retrofit retrofit;
 
     private CardAdapter mCardAdapter;
     private Realm realm;
@@ -51,8 +50,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ((App)getApplication()).getNetComponent().inject(this);
 
-        Realm.init(this);
         realm = Realm.getDefaultInstance();
         realm.addChangeListener(items -> mCardAdapter.notifyDataSetChanged());
 
@@ -60,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
                 .setAction("Повторить", v -> subscribeForData());
 
         Button bClear = (Button) findViewById(R.id.button_clear);
+        bClear.setOnClickListener(v -> realm.executeTransactionAsync(realm1 -> realm1.delete(User.class)));
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         layoutManager = new LinearLayoutManager(this);
@@ -71,7 +71,6 @@ public class MainActivity extends AppCompatActivity {
 
         githubUsers = getResources().getStringArray(R.array.github_users);
 
-        bClear.setOnClickListener(v -> realm.executeTransactionAsync(realm1 -> realm1.delete(User.class)));
         setUpLoadMoreListener();
         subscribeForData();
     }
@@ -100,10 +99,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void subscribeForData() {
-
-        Disposable disposable = paginator
-                .onBackpressureDrop()
-                .concatMap(page -> {
+        Disposable disposable = paginator.onBackpressureDrop().concatMap(page -> {
                     loading = true;
                     progressBar.setVisibility(View.VISIBLE);
                     return dataFromNetwork();
@@ -120,15 +116,12 @@ public class MainActivity extends AppCompatActivity {
                             snackbar.show();
                             loading = false;
                         });
-
         compositeDisposable.add(disposable);
         paginator.onNext(pageNumber);
-
     }
 
     private Flowable<User> dataFromNetwork() {
-         return Application
-                 .getService()
+         return retrofit.create(GithubService.class)
                  .getUser(githubUsers[new Random().nextInt(githubUsers.length-1)])
                  .subscribeOn(Schedulers.newThread());
     }

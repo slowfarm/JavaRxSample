@@ -1,4 +1,4 @@
-package eva.android.com.javarx.Service;
+package eva.android.com.javarx.Net;
 
 
 import eva.android.com.javarx.Models.User;
@@ -8,9 +8,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Path;
 
 public interface GithubService {
-    /**
-    * get request with variable path
-    */
+
     @GET("/users/{user}")
     Flowable<User> getUser(@Path("user") String user);
 }
