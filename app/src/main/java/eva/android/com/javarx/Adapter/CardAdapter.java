@@ -35,11 +35,11 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
         User item = mItems.get(position);
         viewHolder.name.setText("username: " + item.getName());
         viewHolder.id.setText("id: " + item.getId());
-        Picasso.with(viewHolder.itemView.getContext()) // Context
-                .load(item.getAvatarUrl()) // url
-                .placeholder(R.drawable.ic_image) // placeholder image
-                .error(R.drawable.ic_error) // error image
-                .into(viewHolder.avatar); // image container
+        Picasso.with(viewHolder.itemView.getContext())  // Context
+                .load(item.getAvatarUrl())              // url
+                .placeholder(R.drawable.ic_image)       // placeholder image
+                .error(R.drawable.ic_error)             // error image
+                .into(viewHolder.avatar);               // image container
     }
 
     @Override

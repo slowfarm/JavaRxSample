@@ -11,6 +11,7 @@ import io.realm.RealmConfiguration;
 
 public class App extends Application {
     private NetComponent mNetComponent;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -26,6 +27,7 @@ public class App extends Application {
                 .build();
 
     }
+
     public NetComponent getNetComponent() {
         return mNetComponent;
     }

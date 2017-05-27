@@ -10,13 +10,13 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
 import eva.android.com.javarx.Adapter.CardAdapter;
 import eva.android.com.javarx.Models.User;
 import eva.android.com.javarx.Net.GithubService;
-import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -42,15 +42,14 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private Snackbar snackbar;
 
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
-    private PublishProcessor<Integer> paginator = PublishProcessor.create();
-
+    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private final PublishProcessor<Integer> paginator = PublishProcessor.create();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ((App)getApplication()).getNetComponent().inject(this);
+        ((App) getApplication()).getNetComponent().inject(this);
 
         realm = Realm.getDefaultInstance();
         realm.addChangeListener(items -> mCardAdapter.notifyDataSetChanged());
@@ -75,13 +74,6 @@ public class MainActivity extends AppCompatActivity {
         subscribeForData();
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        realm.close();
-        compositeDisposable.clear();
-    }
-
     private void setUpLoadMoreListener() {
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -99,30 +91,34 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void subscribeForData() {
-        Disposable disposable = paginator.onBackpressureDrop().concatMap(page -> {
+        Disposable disposable = paginator.onBackpressureDrop()
+                .concatMap(page -> {
                     loading = true;
                     progressBar.setVisibility(View.VISIBLE);
-                    return dataFromNetwork();
+                    return retrofit.create(GithubService.class)
+                            .getUser(githubUsers[new Random().nextInt(githubUsers.length - 1)])
+                            .delay(2, TimeUnit.SECONDS)
+                            .subscribeOn(Schedulers.newThread());
                 })
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        items -> {
-                            realm.executeTransaction(realm1 -> realm1.insert(items));
-                            loading = false;
-                            progressBar.setVisibility(View.INVISIBLE);
-                        }, error -> {
-                            progressBar.setVisibility(View.INVISIBLE);
-                            error.printStackTrace();
-                            snackbar.show();
-                            loading = false;
-                        });
+                .subscribe(items -> {
+                    realm.executeTransaction(realm1 -> realm1.insert(items));
+                    loading = false;
+                    progressBar.setVisibility(View.INVISIBLE);
+                }, error -> {
+                    progressBar.setVisibility(View.INVISIBLE);
+                    error.printStackTrace();
+                    snackbar.show();
+                    loading = false;
+                });
         compositeDisposable.add(disposable);
-        paginator.onNext(pageNumber);
     }
 
-    private Flowable<User> dataFromNetwork() {
-         return retrofit.create(GithubService.class)
-                 .getUser(githubUsers[new Random().nextInt(githubUsers.length-1)])
-                 .subscribeOn(Schedulers.newThread());
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        realm.close();
+        compositeDisposable.clear();
     }
+
 }

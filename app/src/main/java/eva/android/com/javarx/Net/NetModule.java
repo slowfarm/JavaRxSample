@@ -10,7 +10,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 @Module
 public class NetModule {
-    private String mBaseUrl;
+    private final String mBaseUrl;
 
     public NetModule(String mBaseUrl) {
         this.mBaseUrl = mBaseUrl;
@@ -23,6 +23,7 @@ public class NetModule {
                 .Builder()
                 .baseUrl(mBaseUrl)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create()).build();
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
     }
 }
