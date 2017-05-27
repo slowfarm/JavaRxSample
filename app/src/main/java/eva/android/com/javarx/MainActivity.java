@@ -32,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
 
     private CardAdapter mCardAdapter;
     private Realm realm;
-    private String[] githubUsers;
     private RecyclerView mRecyclerView;
     private LinearLayoutManager layoutManager;
     private boolean loading = false;
@@ -67,8 +66,6 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(mCardAdapter);
 
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
-
-        githubUsers = getResources().getStringArray(R.array.github_users);
 
         setUpLoadMoreListener();
         subscribeForData();
@@ -112,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
                     loading = false;
                 });
         compositeDisposable.add(disposable);
+        paginator.onNext(pageNumber);
     }
 
     @Override

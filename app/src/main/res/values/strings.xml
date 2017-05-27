@@ -3,15 +3,4 @@
     <string name="clear">Отчистить</string>
     <string name="avatar">avatar</string>
     <string name="base_url">http://178.159.38.33:8088/</string>
-    <string-array name="github_users">
-        <item>slowfarm</item>
-        <item>JakeWharton</item>
-        <item>gothinkster</item>
-        <item>Babylonpartners</item>
-        <item>keon</item>
-        <item>ageitgey</item>
-        <item>caffe2</item>
-        <item>kamranahmedse</item>
-        <item>google</item>
-    </string-array>
 </resources>

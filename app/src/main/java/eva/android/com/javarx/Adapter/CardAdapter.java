@@ -1,5 +1,7 @@
 package eva.android.com.javarx.Adapter;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,8 +35,12 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
         User item = mItems.get(position);
-        viewHolder.name.setText("username: " + item.getName());
+        viewHolder.login.setText(item.getLogin());
         viewHolder.id.setText("id: " + item.getId());
+        viewHolder.name.setText("name: " + (item.getName()!=null ? item.getName() : "-"));
+        viewHolder.company.setText("company: " + (item.getCompany()!=null ? item.getCompany() : "-"));
+        viewHolder.blog.setText("blog: " + (item.getBlog()!=null ? item.getBlog() : "-"));
+        viewHolder.location.setText("location: " + (item.getLocation()!=null ? item.getLocation() : "-"));
         Picasso.with(viewHolder.itemView.getContext())  // Context
                 .load(item.getAvatarUrl())              // url
                 .placeholder(R.drawable.ic_image)       // placeholder image
@@ -49,14 +55,27 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
 
     class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView id;
-        private final TextView name;
+        private final TextView login;
         private final ImageView avatar;
+        private final TextView name;
+        private final TextView company;
+        private final TextView blog;
+        private final TextView location;
 
         ViewHolder(View itemView) {
             super(itemView);
             id = (TextView) itemView.findViewById(R.id.id);
-            name = (TextView) itemView.findViewById(R.id.name);
+            login = (TextView) itemView.findViewById(R.id.login);
             avatar = (ImageView) itemView.findViewById(R.id.avatar);
+            name = (TextView) itemView.findViewById(R.id.name);
+            company = (TextView) itemView.findViewById(R.id.company);
+            blog = (TextView) itemView.findViewById(R.id.blog);
+            location = (TextView) itemView.findViewById(R.id.location);
+
+            itemView.setOnClickListener(v->
+                v.getContext().startActivity(new Intent(Intent.ACTION_VIEW,
+                        Uri.parse("https://github.com/"
+                                +mItems.get(getAdapterPosition()).getLogin()))));
         }
     }
 }
