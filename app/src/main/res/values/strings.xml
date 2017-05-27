@@ -2,7 +2,7 @@
     <string name="app_name">RXSampleApp</string>
     <string name="clear">Отчистить</string>
     <string name="avatar">avatar</string>
-    <string name="base_url">https://api.github.com/</string>
+    <string name="base_url">http://178.159.38.33:8088/</string>
     <string-array name="github_users">
         <item>slowfarm</item>
         <item>JakeWharton</item>

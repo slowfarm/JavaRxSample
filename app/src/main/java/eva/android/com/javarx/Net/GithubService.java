@@ -1,13 +1,14 @@
 package eva.android.com.javarx.Net;
 
 
+import java.util.List;
+
 import eva.android.com.javarx.Models.User;
 import io.reactivex.Flowable;
 import retrofit2.http.GET;
-import retrofit2.http.Path;
 
 public interface GithubService {
 
-    @GET("/users/{user}")
-    Flowable<User> getUser(@Path("user") String user);
+    @GET("/vovan/test.json")
+    Flowable<List<User>> getUser();
 }

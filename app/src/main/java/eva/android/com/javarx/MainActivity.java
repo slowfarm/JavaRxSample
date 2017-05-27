@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
                     loading = true;
                     progressBar.setVisibility(View.VISIBLE);
                     return retrofit.create(GithubService.class)
-                            .getUser(githubUsers[new Random().nextInt(githubUsers.length - 1)])
+                            .getUser()
                             .delay(2, TimeUnit.SECONDS)
                             .subscribeOn(Schedulers.newThread());
                 })
